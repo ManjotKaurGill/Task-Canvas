@@ -1,0 +1,128 @@
+.task-card {
+  position: absolute;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  width: 250px;
+  height: auto;
+}
+
+.task-text-input {
+  width: 93%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 5px;
+}
+
+.category-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.undo-redo-btn {
+  border: none;
+  background: none;
+  color: #000;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.undo-redo-btn:hover {
+  color: #9ea1a3;
+}
+
+.category-select,
+.date-input {
+  padding: 4px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.canvas-wrapper {
+  width: 100%;
+  height: auto;
+  overflow: auto;
+  scrollbar-width: none;
+  border: 1px dashed #aaa;
+  background-color: #fff;
+}
+
+.task-sketch {
+  display: block;
+  background-color: white;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.color-picker {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: none;
+}
+
+.clear-btn,
+.save-btn {
+  padding: 5px 10px;
+  border-radius: 6px;
+  margin: 2px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.clear-btn {
+  background-color: #ff7f7f;
+  color: white;
+}
+
+.save-btn {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.completion-checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.custom-checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #333;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  box-sizing: border-box;
+  transition: 0.2s;
+  padding: 3px 10px;
+}
+
+.custom-checkbox.checked {
+  background-color: #4CAF50;
+  border-color: #4CAF50;
+}
+
+.custom-checkbox.checked::after {
+  content: "✔";
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
