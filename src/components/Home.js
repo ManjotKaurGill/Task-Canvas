@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase/firebaseConfig";
 import "../styles/Home.css";
 import "../styles/canvas.css";
 import "../styles/teams.css";
 
 const Home = () => {
+  const user = auth.currentUser;
   const navigate = useNavigate();
 
   return (
@@ -66,9 +68,12 @@ const Home = () => {
             <p>Work together in real-time, share ideas, and stay in sync.</p>
           </div>
         </div>
-        <button className="signup-btn" onClick={() => navigate('/teams')}>
-          Explore Teams
-        </button>
+        {user ? (
+          <button onClick={() => navigate('/teams')} className="signup-btn">Explore Teams</button>
+        ) : (
+          <button onClick={() => navigate('/login')} className="signup-btn">Explore Teams</button>
+        )}
+
       </section>
 
       <section className="cta">

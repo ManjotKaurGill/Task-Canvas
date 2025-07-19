@@ -9,7 +9,7 @@
 
 .profile-card {
   width: 100%;
-  max-width: 420px;
+  max-width: 400px;
   padding: 2rem;
   background: linear-gradient(135deg, #00c6ff, #539ffa);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);

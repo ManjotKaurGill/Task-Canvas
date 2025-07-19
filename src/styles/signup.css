@@ -92,8 +92,16 @@
 }
 
 @media (max-width: 480px) {
-  .name-fields,
+  .name-fields {
+    flex-direction: column;
+    width: 95%;
+  }
+
   .birthday-fields {
     flex-direction: column;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    background: #f9f9f9;
+    width: 95%;
   }
 }
