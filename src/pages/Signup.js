@@ -51,7 +51,6 @@ export default function Signup() {
         birthday,
       });
 
-      alert('Email verified. Account setup complete.');
       navigate('/canvas');
     } else {
       alert('Email not verified yet. Please check again.');
