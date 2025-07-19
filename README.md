@@ -1,6 +1,37 @@
 # TaskCanvas 🎨
 
-A creative and visual way to manage your tasks. Sketch, drag, and organize your day with ease.
+TaskCanvas is a visual task management application designed for creative individuals and teams who prefer flexible, canvas-based organization over traditional lists. It allows users to sketch, drag, and plan their tasks freely within an interactive workspace.
+
+# Live Demo
+https://task-canvas-bice.vercel.app/
+
+# Overview
+TaskCanvas offers an intuitive and modern interface for managing tasks with added flexibility. Rather than confining tasks to static lists, users can arrange, sketch on, and categorize tasks in a way that visually suits their workflow.
+
+Key functionalities include task sketching, category tagging, due dates, and real-time collaboration features. Task data is securely synchronized via Firebase services.
+
+---
+
+# Core Features
+- Freeform canvas for flexible task arrangement
+- Sketching tools directly on tasks
+= Visual categories with color indicators
+- Due date management and completion tracking
+= Team collaboration via invite IDs
+- Real-time sync using Firebase Authentication and Firestore
+
+---
+
+# Technologies Used
+- React
+- Firebase Authentication
+- Firestore Database
+- React Context API
+- React Router
+- Custom Canvas Drawing 
+- Modern CSS
+
+---
 
 ## Available Scripts
 
@@ -20,27 +51,6 @@ It correctly bundles React in production mode and optimizes the build for best p
 
 ---
 
-## Features
-
-Freeform Canvas for Tasks  
-Sketch on Tasks  
-Categories with Colors / Icons  
-Firebase Authentication & Firestore Sync  
-Team Collaboration via Invite IDs
-
----
-
-## Technologies
-
-- React  
-- Firebase Auth & Firestore  
-- React Router  
-- CSS3  
-- Custom Canvas Drawing  
-- React Context API
-
----
-
 ## Setup
 
 1️ Clone the repo  
@@ -49,3 +59,9 @@ Team Collaboration via Invite IDs
 4️ Run `npm start`  
 
 ---
+
+# License
+This project is licensed under the MIT License.
+
+# Maintainer
+- Manjot Kaur
