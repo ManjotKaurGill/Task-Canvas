@@ -64,4 +64,4 @@ It correctly bundles React in production mode and optimizes the build for best p
 This project is licensed under the MIT License.
 
 # Maintainer
-- Manjot Kaur
+Manjot Kaur
