@@ -20,23 +20,9 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const acceptInvitesIfAny = async () => {
-    if (!auth.currentUser) return;
-    const userEmail = auth.currentUser.email;
-    const teamsRef = collection(db, "teams");
-    const q = query(teamsRef, where("invitedEmails", "array-contains", userEmail));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach(async (docSnap) => {
-      await updateDoc(doc(db, "teams", docSnap.id), {
-        members: arrayUnion(auth.currentUser.uid),
-      });
-    });
-  };
-
   const handleLogin = async () => {
     try {
       await login(email, password);
-      await acceptInvitesIfAny();
       navigate('/canvas');
     } catch (err) {
       alert("Error: " + err.message);
@@ -46,7 +32,6 @@ export default function Login() {
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
-      await acceptInvitesIfAny();
       navigate('/canvas');
     } catch (err) {
       console.error('Google Sign-In error:', err);
