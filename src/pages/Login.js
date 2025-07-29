@@ -1,55 +1,60 @@
 import { useEffect, useState } from 'react';
-import { auth, db } from '../firebase/firebaseConfig';
+import { auth } from '../firebase/firebaseConfig';
 import { login, signInWithGoogle } from '../firebase/authService';
 import { onAuthStateChanged } from 'firebase/auth';
-import {
-  getDocs,
-  query,
-  collection,
-  where,
-  updateDoc,
-  doc,
-  arrayUnion,
-} from "firebase/firestore";
 import '../styles/login.css';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify'
 
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = async () => {
-    try {
-      await login(email, password);
-      navigate('/canvas');
-    } catch (err) {
-      alert("Error: " + err.message);
+  const handleLogin = async (e) => {
+  e.preventDefault();
+  try {
+    const userCredential = await login(email, password);
+    const user = userCredential.user;
+    
+    await user.reload();
+    
+    if (!user.emailVerified) {
+      toast.error('Please verify your email before logging in.');
+      return;
     }
-  };
+
+    navigate('/canvas');
+  } catch (err) {
+    toast.error('Login failed: ' + err.message);
+  }
+};
 
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
       navigate('/canvas');
     } catch (err) {
-      console.error('Google Sign-In error:', err);
-      alert('Something went wrong during Google sign-in.');
+      toast.error('Google Sign-In error:', err);
     }
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
+  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    if (currentUser) {
+      await currentUser.reload();
+      if (currentUser.emailVerified) {
         navigate('/canvas');
       }
-    });
-    return () => unsubscribe();
-  }, [navigate]);
+    }
+  });
+  return () => unsubscribe();
+}, [navigate]);
 
   return (
     <div className="login-wrapper">
+      <ToastContainer position="top-center" />
       <div className="login-container">
         <h2>Sign In to Save Your Tasks</h2>
         <section>

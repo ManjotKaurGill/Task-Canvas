@@ -12,6 +12,8 @@ import {
 } from "../firebase/firebaseTasks";
 import { TaskContext } from "../context/TaskContext";
 import { doc, getDoc } from "firebase/firestore";
+import { toast, ToastContainer } from 'react-toastify';
+import { onAuthStateChanged } from "firebase/auth";
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -40,11 +42,20 @@ const CanvasBoard = () => {
     const teamId = query.get("teamId");
 
     useEffect(() => {
-        const unsubscribeAuth = auth.onAuthStateChanged((user) => {
-            setUser(user);
-            if (!user) navigate("/login");
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+            if (!currentUser) {
+                navigate('/login');
+            } else {
+                await currentUser.reload();
+                if (!currentUser.emailVerified) {
+                    toast.error("Please verify your email first.");
+                    navigate('/login');
+                } else {
+                    setUser(currentUser); 
+                }
+            }
         });
-        return () => unsubscribeAuth();
+        return () => unsubscribe();
     }, [navigate]);
 
     useEffect(() => {
@@ -150,6 +161,7 @@ const CanvasBoard = () => {
         <div className="canvas-container">
             <header className="canvas-header">
                 <h1 className="logo"><a href="/" style={{ textDecoration: 'none' }}>TaskCanvas 🎨</a></h1>
+                <ToastContainer position="top-center" />
                 <div className="header-btns-container">
                     <button className="header-btn" onClick={handleAddTask}>
                         + Add Task

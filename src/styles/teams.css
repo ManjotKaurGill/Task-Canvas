@@ -210,3 +210,35 @@
     background-color: rgba(0, 0, 0, 0.05);
     color: red;
 }
+
+@media (max-width: 480px) {
+  .teams-actions {
+    width: 90%;
+    padding: 1.5rem;
+  }
+
+  .teams-list {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 0 1rem;
+  }
+
+  .team-card {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .team-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .team-card button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .team-members {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}

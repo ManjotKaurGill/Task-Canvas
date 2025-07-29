@@ -2,10 +2,13 @@ import { useState } from 'react';
 import {
   signUpWithUserDetails,
   saveUserToFirestore,
+  login
 } from '../firebase/authService';
 import { auth } from '../firebase/firebaseConfig';
 import '../styles/signup.css';
 import { useNavigate, Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Signup() {
   const [firstName, setFirstName] = useState('');
@@ -22,8 +25,9 @@ export default function Signup() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
+
     if (password !== confirmPassword) {
-      alert('Passwords do not match.');
+      toast.error('Passwords do not match.');
       return;
     }
 
@@ -31,12 +35,38 @@ export default function Signup() {
       const user = await signUpWithUserDetails(email, password);
       setFirebaseUser(user);
       setVerificationSent(true);
-      alert('Verification email sent. Please check your inbox.');
+      toast.success('Verification email sent. Please check your inbox.');
     } catch (err) {
-      alert('Error: ' + err.message);
+      if (err.code === 'auth/email-already-in-use') {
+        try {
+          const signInResult = await login(email, password);
+
+          if (!signInResult.user.emailVerified) {
+            await auth.currentUser?.reload();
+            await auth.currentUser?.sendEmailVerification({
+              url: 'http://localhost:3000/',
+            });
+
+            setFirebaseUser(signInResult.user);
+            setVerificationSent(true);
+            toast.info('Email already registered but not verified. We’ve sent a new verification email.');
+          } else {
+            toast.warn('Email is already in use and verified. Please login.');
+          }
+        } catch (signInErr) {
+          if (signInErr.code === 'auth/wrong-password') {
+            toast.error('Incorrect password. Please try again.');
+          } else {
+            toast.warn('Email already registered. Please verify your email before logging in.');
+          }
+        }
+      } else {
+        toast.error(err.message);
+      }
     }
   };
 
+  // ✅ FIXED: moved this OUTSIDE handleSignup
   const checkIfVerified = async () => {
     if (!firebaseUser) return;
     setCheckingVerification(true);
@@ -53,7 +83,7 @@ export default function Signup() {
 
       navigate('/canvas');
     } else {
-      alert('Email not verified yet. Please check again.');
+      toast.warn('Email not verified yet. Please check again.');
     }
 
     setCheckingVerification(false);
@@ -61,53 +91,32 @@ export default function Signup() {
 
   return (
     <div className="signup-wrapper">
+      <ToastContainer position="top-center" />
       <form className="signup-container" onSubmit={handleSignup}>
         <h1>Create your Account</h1>
         <p>One account is all you need to access your personal canvas.</p>
 
         <div className="name-fields">
-          <input
-            placeholder="First Name"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            required
-          />
-          <input
-            placeholder="Last Name"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            required
-          />
+          <input placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
+          <input placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
         </div>
 
         <div className="birthday-fields">
-          <select
-            value={birthday.month}
-            required
-            onChange={(e) => setBirthday({ ...birthday, month: e.target.value })}
-          >
+          <select value={birthday.month} required onChange={(e) => setBirthday({ ...birthday, month: e.target.value })}>
             <option>Month</option>
             {Array.from({ length: 12 }, (_, i) => (
               <option key={i}>{i + 1}</option>
             ))}
           </select>
 
-          <select
-            required
-            value={birthday.day}
-            onChange={(e) => setBirthday({ ...birthday, day: e.target.value })}
-          >
+          <select value={birthday.day} required onChange={(e) => setBirthday({ ...birthday, day: e.target.value })}>
             <option>Day</option>
             {Array.from({ length: 31 }, (_, i) => (
               <option key={i}>{i + 1}</option>
             ))}
           </select>
 
-          <select
-            required
-            value={birthday.year}
-            onChange={(e) => setBirthday({ ...birthday, year: e.target.value })}
-          >
+          <select value={birthday.year} required onChange={(e) => setBirthday({ ...birthday, year: e.target.value })}>
             <option>Year</option>
             {Array.from({ length: 100 }, (_, i) => (
               <option key={i}>{new Date().getFullYear() - i}</option>
@@ -116,27 +125,9 @@ export default function Signup() {
         </div>
 
         <div style={{ width: '95%' }}>
-          <input
-            type="email"
-            placeholder="name@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
+          <input type="email" placeholder="name@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
         </div>
 
         <p>
